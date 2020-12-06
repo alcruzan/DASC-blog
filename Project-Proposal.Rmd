@@ -1,0 +1,124 @@
+---
+title: "Project Proposal"
+author: "Ava Cruzan"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
+```
+
+## 1 My blog link
+
+My blog is available [here](https://dasc-1104-alc.netlify.app/)
+
+```{r}
+library(here)
+library(ggplot2)
+library(tidyverse)
+
+dat1 <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "plants.csv"))
+
+dat2 <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "actions.csv"))
+
+```
+
+```{r}
+glimpse(dat1)
+```
+```{r}
+glimpse(dat2)
+```
+
+
+## 2 Extinct Plants
+
+For this project, I would like to examine the plants that are extinct. I am using the
+dataset plants.csv from the Tidy Tuesday website. The data consists of 500 observations and 24
+variables. The binomial_name variable shows the species name for the plant. The country variable
+shows what country the plant is native to. The continent variable shows the continent the plant
+is from. The variable group is the plant's taxonomic group. The year_last_seen variable is the
+last time the plant was seen. The threat_AA, threat_BRU, threat_RCD, threat_ISGD, threat_EPM, 
+threat_CC, threat_HID, threat_P, threat_TS, threat_NSM, threat_GE, and threat_NA variables are
+for telling if the plant is threatened by agriculture and aquaculture, biological resource use, 
+commercial development, invasive species, energy production and mining, climate change, human 
+intrusions, pollution, transportation corridor, natural system modifications, geological events, 
+or the threat is unknown respectively. The variables action_LWP, action_SM, action_LP, action_RM, 
+action_EA, and action_NA are for showing if there is current action in regards to land and water 
+protection, species management, law and policy, research and monitoring, education and awareness,
+or if there is no current action known. The variable red_list_category shows the IUCN Red list 
+category. Initial exploration indicates that a decent portion of the plants haven't been seen 
+since before 1900, and it appears that many of the plants that have gone extinct are from Asia,
+Africa, or South America.
+
+Additional data to understand these plants more is in actions.csv dataset also found on Tidy 
+Tuesday. The actions.csv dataset has 3000 observations and 8 variables. These datasets contain
+much of the same information. The actions.csv has the same variables binomial_name, country,
+continent, group, year_last_seen, and red_list_category like plants.csv. However, actions.csv also
+has variables action_type to spell out the type of action and action_taken to tell if the action has 
+been taken or not. With this data, it will be easier to tell how much work is getting done to combat
+extinction.
+
+* Question 1: First, is there a country or continent that has a majority of the plant extinctions. If so, which country or continent. To test this, I plan to calculate how many plants have gone extinct per continent and generate data visualizations in order to easily see if there is a trend.
+* Question 2: Second, is there a time period in which there were significantly more extinctions. If so, is there a trend to predict future plant extinctions. To test this, I plan to generate a line chart using ggplot to see if there is a trend. I will use other forms of data groupings to see if there are other factors such as different threat types and locations that would affect the plot.
+* Question 3: Third, I would like to see how much action is being taken to combat the extinction of plants. I plan to join the two datasets in order to get more information. I would like to use data visualization to see where the most action and least action is being taken, and I would also like to see which countries and continents are taking the most action.
+
+## 3 San Francisco Trees
+
+```{r}
+dat3 <- read.csv(here("tidytuesday-master", "data", "2020", "2020-01-28", "sf_trees.csv"))
+```
+
+```{r}
+glimpse(dat3)
+```
+
+
+Using the sf_trees.csv dataset from Tidy Tuesday, I investigate what the trees
+are like in San Francisco. The data has 192,987 observations and 12 variables. 
+The variables are the ID given to the tree, the legal status of the tree, the 
+species of the tree, the street address, the order of the trees in the case that 
+there are multiple trees at one location, where the tree is on the lot, the 
+primary caretaker of the tree, the date it was planted, the diameter of the tree, 
+the dimension of the plot, the latitude the plant is at, and the longitude the 
+tree is planted. 
+* Question 1: First, Where are most of the trees in San Francisco? Are there in locations with an especially high amount of trees? Are most of these trees public or private? To analyze this, I will create a spatial map using ggplot and compare that to a map of San Francisco to see locations of interest.
+* Question 2: Second, What is the most common tree in San Francisco? If so, What kind  To assess this, I will use data manipulation and represent this data visually to show what kind of tree is the most popular tree.
+* Question 3: Third, Does site of the tree affect the diameter of the tree? To test this, I will create a graph that compares the age, diameter, and site of a tree to see if some trees are growing in less than ideal places.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

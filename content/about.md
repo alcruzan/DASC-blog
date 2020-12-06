@@ -1,6 +1,9 @@
 ---
 title: "About"
-date: "2016-05-05T21:48:51-07:00"
+date: "2020-12-06T21:48:51-07:00"
 ---
 
-This is a "hello world" example website for the [**blogdown**](https://github.com/rstudio/blogdown) package. The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium).
+Here is the link to [My website](https://dasc-1104-alc.netlify.app/)
+
+I am a programming student and business major, and here is where I post about what
+I learn.
