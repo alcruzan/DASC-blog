@@ -18,7 +18,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\
 
 [[menu.main]]
     name = "Resume"
-    url = "/resume-example.pdf"
+    url = "resume-example.pdf"
 
 
 [params]
