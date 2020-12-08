@@ -1,7 +1,11 @@
 ---
-title: "San Francisco"
-date: 2015-01-01T13:09:13-06:00
+title: "Extinct Plants"
+output: pdf_document
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ```{r}
 library(ggplot2)
@@ -13,71 +17,67 @@ library(patchwork)
 ```
 
 ```{r}
-sf <- read.csv(here("tidytuesday-master", "data", "2020", "2020-01-28", "sf_trees.csv"))
+ep <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "plants.csv"))
+
+ap <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "actions.csv"))
+
+ep
+ap
 ```
 
 ```{r}
-ggplot(sf, aes(x = longitude, y = latitude, color = caretaker)) +
-  geom_point(size = 0.001, alpha = 0.2) +
-  xlim(-122.36,-122.525) + 
-  ylim(37.7,37.82) +
-  theme(legend.position = "none")
-```
-
-```{r}
-
-species_list <- sf %>%
-  mutate(species = word(species, 1, sep=" ")) %>%
-  separate_rows(species, sep = ' ') %>%
-  group_by(species) %>%
+country_clean <- ep %>%
+  filter(!is.na(country)) %>%
+  mutate(abbr = substr(country, 1,10)) %>%
+  group_by(country, red_list_category, abbr) %>%
   summarize(Count = n()) %>%
-  filter(Count >= 5000)
+  filter(Count >= 3)
 
-x <- 0
+c1 <- ggplot(country_clean, aes(x= abbr, y=Count, color = red_list_category)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90))
 
-for (i in 1:12) {
-  x <- x + species_list[i,2]
-}
+c2 <- ggplot(ep, aes(x=continent, fill = group)) +
+  geom_bar() 
+  
+c2 /
+  c1
+```
 
-z <- 19287 - x
+```{r}
 
-species_list[nrow(species_list) + 1,] = c("Other", z)
+threat <- ep %>%
+  group_by(year_last_seen) %>%
+  mutate(threat_level = (threat_AA + threat_BRU + threat_RCD + threat_ISGD + threat_EPM + threat_CC + threat_HID + threat_P + threat_TS + threat_NSM + threat_GE + threat_NA)) %>%
+  mutate(action_level = action_LWP + action_SM + action_LP + action_RM + action_EA + action_NA) %>%
+  filter(!is.na(year_last_seen)) %>%
+  ungroup(year_last_seen) %>%
+  mutate(year_last_seen = factor(year_last_seen, levels=c("Before 1900", "1900-1919", "1920-1939", "1940-1959", "1960-1979", "1980-1999", "2000-2020")))
 
-ggplot(species_list, aes(x= "", y=Count, fill = species)) +
-  geom_bar(width = 10, stat = "identity") +
-  coord_polar("y", start = 0)   
+line_graph <- threat %>%
+  group_by(year_last_seen) %>%
+  summarize(Count = n())  
+
+ggplot(data = threat, aes(x = year_last_seen, y = threat_level)) +
+  geom_point(position = "jitter", aes(size = action_level, color = red_list_category)) +
+  scale_y_continuous(name = "Threat Level", sec.axis = sec_axis(trans=~.*20, name = "Number of Extinctions")) +
+  geom_boxplot(data = line_graph, aes(x = year_last_seen, y = Count/15))
 
 ```
 
 ```{r}
-g1 <- ggplot(sf, aes(x= site_info)) +
+actions <- ap %>%
+  left_join(ep) %>%
+  filter(action_taken == 1) %>%
+  group_by(country) %>%
+  mutate(con_count = n()) %>%
+  filter(con_count >= 12)
+
+ggplot(actions, aes(x= action_type, fill = country))+
   geom_bar() +
   theme(axis.text.x = element_text(angle = 90))
 
-g2 <- ggplot(sf, aes(x= site_info)) +
+ggplot(actions, aes(x= action_type, fill = continent))+
   geom_bar() +
-  theme(axis.text.x = element_text(angle = 90)) + 
-  ylim(0,12500)
-
-g1 /
-  g2
-
-```
-
-```{r}
-today <- 2020
-
-tree_age <- sf %>%
-  filter(!is.na(dbh)) %>%
-  mutate(age = substr(date, 1,4)) %>%
-  mutate(age = as.numeric(age)) %>%
-  mutate(age = today - age) 
-
-
-ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
-  geom_point(position = "jitter", alpha = 0.05) +
-  facet_wrap(~cut_number(tree_age$dbh, 2)) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ylim(0,120)  
-
-```
+  theme(axis.text.x = element_text(angle = 90))
+````
