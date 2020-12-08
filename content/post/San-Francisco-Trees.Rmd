@@ -80,7 +80,5 @@ ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
   theme(axis.text.x = element_text(angle = 90)) +
   ylim(0,120)  
 
-
-
 ```
 
