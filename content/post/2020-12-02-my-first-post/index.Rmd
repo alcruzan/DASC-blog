@@ -10,10 +10,3 @@ tags: [R, blogdown]
 My first post.
 
 I like the penguins
-
-```{r}
-library(tidyverse)
-library(palmerpenguins
-glimpse(penguins)
-
-```
