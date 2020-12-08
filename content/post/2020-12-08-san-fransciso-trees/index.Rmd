@@ -1,10 +1,11 @@
 ---
-title: San Fransciso Trees
-author: ~
+title: "San Fransciso Trees"
+author: 'null'
 date: '2020-12-08'
-slug: san-fransciso-trees
+output: pdf_document
 categories: []
 tags: []
+slug: san-fransciso-trees
 ---
 
 ```{r setup, include=FALSE}
