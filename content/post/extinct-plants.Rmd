@@ -59,7 +59,7 @@ line_graph <- threat %>%
   summarize(Count = n())  
 
 ggplot(data = threat, aes(x = year_last_seen, y = threat_level)) +
-  geom_point(position = "jitter", aes(size = action_level, color = red_list_category)) +
+  geom_point(position = "jitter", alpha = 0.5, aes(size = action_level, color = red_list_category)) +
   scale_y_continuous(name = "Threat Level", sec.axis = sec_axis(trans=~.*20, name = "Number of Extinctions")) +
   geom_boxplot(data = line_graph, aes(x = year_last_seen, y = Count/15))
 
@@ -81,10 +81,3 @@ ggplot(actions, aes(x= action_type, fill = continent))+
   geom_bar() +
   theme(axis.text.x = element_text(angle = 90))
 ````
-
-
-
-
-
-
-
