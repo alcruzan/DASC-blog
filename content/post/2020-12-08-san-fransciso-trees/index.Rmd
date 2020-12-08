@@ -1,4 +1,13 @@
 ---
+title: San Fransciso Trees
+author: ~
+date: '2020-12-08'
+slug: san-fransciso-trees
+categories: []
+tags: []
+---
+
+---
 title: "San Francisco"
 date: 2015-01-01T13:09:13-06:00
 ---
@@ -75,7 +84,7 @@ g2 <- ggplot(sf, aes(x= site_info)) +
   ylab("Number of Trees") +
   ggtitle("Popular Locations of Trees in San Francisco (excluding sidewalk :curbside : cutout")
 
-g1 
+g1 /
   g2
 
 ```
@@ -97,4 +106,3 @@ ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
   ylim(0,120)  
 
 ```
-
