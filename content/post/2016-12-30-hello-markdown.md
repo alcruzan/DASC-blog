@@ -1,24 +1,83 @@
 ---
-title: "A Plain Markdown Post"
-date: "2016-12-30T21:49:57-07:00"
+title: "San Francisco"
+date: 2015-01-01T13:09:13-06:00
 ---
 
-This is a post written in plain Markdown (`*.md`) instead of R Markdown (`*.Rmd`). The major differences are:
+```{r}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(here)
+library(patchwork)
+```
 
-1. You cannot run any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````);
-2. A plain Markdown post is rendered through [Blackfriday](https://gohugo.io/overview/configuration/), and an R Markdown document is compiled by [**rmarkdown**](http://rmarkdown.rstudio.com) and [Pandoc](http://pandoc.org).
+```{r}
+sf <- read.csv(here("tidytuesday-master", "data", "2020", "2020-01-28", "sf_trees.csv"))
+```
 
-There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but not with Pandoc:
+```{r}
+ggplot(sf, aes(x = longitude, y = latitude, color = caretaker)) +
+  geom_point(size = 0.001, alpha = 0.2) +
+  xlim(-122.36,-122.525) + 
+  ylim(37.7,37.82) +
+  theme(legend.position = "none")
+```
 
-- [x] Write an R package.
-- [ ] Write a book.
-- [ ] ...
-- [ ] Profit!
+```{r}
 
-Similarly, Blackfriday does not support LaTeX math and Pandoc does. I have added the MathJax support to this theme ([hugo-lithium](https://github.com/yihui/hugo-lithium)) but there is a caveat for plain Markdown posts: you have to include math expressions in a pair of backticks (inline: `` `$ $` ``; display style: `` `$$ $$` ``), e.g., `$S_n = \sum_{i=1}^n X_i$`.^[This is because we have to protect the math expressions from being interpreted as Markdown. You may not need the backticks if your math expression does not contain any special Markdown syntax such as underscores or asterisks, but it is always a safer choice to use backticks. When you happen to have a pair of literal dollar signs inside the same element, you can escape one dollar sign, e.g., `\$50 and $100` renders "\$50 and $100".] For R Markdown posts, you do not need the backticks, because Pandoc can identify and process math expressions.
+species_list <- sf %>%
+  mutate(species = word(species, 1, sep=" ")) %>%
+  separate_rows(species, sep = ' ') %>%
+  group_by(species) %>%
+  summarize(Count = n()) %>%
+  filter(Count >= 5000)
 
-When creating a new post, you have to decide whether the post format is Markdown or R Markdown, and this can be done via the `ext` argument of the function `blogdown::new_post()`, e.g.
+x <- 0
 
-```r
-blogdown::new_post("Post Title", ext = '.Rmd')
+for (i in 1:12) {
+  x <- x + species_list[i,2]
+}
+
+z <- 19287 - x
+
+species_list[nrow(species_list) + 1,] = c("Other", z)
+
+ggplot(species_list, aes(x= "", y=Count, fill = species)) +
+  geom_bar(width = 10, stat = "identity") +
+  coord_polar("y", start = 0)   
+
+```
+
+```{r}
+g1 <- ggplot(sf, aes(x= site_info)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+
+g2 <- ggplot(sf, aes(x= site_info)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90)) + 
+  ylim(0,12500)
+
+g1 /
+  g2
+
+```
+
+```{r}
+today <- 2020
+
+tree_age <- sf %>%
+  filter(!is.na(dbh)) %>%
+  mutate(age = substr(date, 1,4)) %>%
+  mutate(age = as.numeric(age)) %>%
+  mutate(age = today - age) 
+
+
+ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
+  geom_point(position = "jitter", alpha = 0.05) +
+  facet_wrap(~cut_number(tree_age$dbh, 2)) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylim(0,120)  
+
 ```
