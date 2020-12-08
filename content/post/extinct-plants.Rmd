@@ -1,0 +1,63 @@
+---
+title: "Extinct Plants"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(here)
+library(patchwork)
+```
+
+```{r}
+ep <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "plants.csv"))
+
+ap <- read.csv(here("tidytuesday-master", "data", "2020", "2020-08-18", "actions.csv"))
+
+ep
+ap
+```
+
+```{r}
+country_clean <- ep %>%
+  filter(!is.na(country)) %>%
+  mutate(abbr = substr(country, 1,10)) %>%
+  group_by(country, red_list_category, abbr) %>%
+  summarize(Count = n()) %>%
+  filter(Count >= 3)
+  
+country_clean
+
+  
+ggplot(country_clean, aes(x= abbr, y=Count, color = red_list_category)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplot(ep, aes(x=continent, fill = group)) +
+  geom_bar() 
+  
+
+```
+
+```{r}
+
+threat <- ep %>%
+  group_by(year_last_seen) %>%
+  mutate(threat_level = (threat_AA + threat_BRU + threat_RCD + threat_ISGD + threat_EPM + threat_CC + threat_HID + threat_P + threat_TS + threat_NSM + threat_GE + threat_NA)) %>%
+  mutate(action_level = action_LWP + action_SM + action_LP + action_RM + action_EA + action_NA)
+
+
+ggplot(threat, aes(x = year_last_seen, y = threat_level, size = action_level, color = red_list_category)) +
+  geom_point(position = "jitter")
+
+
+```
+
+
