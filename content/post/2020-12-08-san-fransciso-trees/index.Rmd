@@ -70,7 +70,7 @@ g1 <- ggplot(sf, aes(x= site_info)) +
   theme(axis.text.x = element_text(angle = 90)) +
   xlab("Tree Location") +
   ylab("Number of Trees") +
-  ggtitle("Popular Locations of Trees in San Francisco")
+  ggtitle("Popular Locations of Trees in SF")
 
 g2 <- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
@@ -78,12 +78,13 @@ g2 <- ggplot(sf, aes(x= site_info)) +
   ylim(0,12500) +
   xlab("Tree Location") +
   ylab("Number of Trees") +
-  ggtitle("Popular Locations of Trees in San Francisco (excluding sidewalk :curbside : cutout")
+  ggtitle("Locations Excluding Curbside Cutouts")
 
-g1 /
-  g2
+g1 + g2
 
 ```
+
+As seen in the graph, a majority of the trees are on curb
 
 ```{r}
 today <- 2020
@@ -102,3 +103,5 @@ ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
   ylim(0,120)  
 
 ```
+
+
