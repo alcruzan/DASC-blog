@@ -21,20 +21,45 @@ library(here)
 library(patchwork)
 ```
 
+Using the sf_trees.csv dataset from Tidy Tuesday, I investigate what the trees
+are like in San Francisco. The data has 192,987 observations and 12 variables. 
+The variables are the ID given to the tree, the legal status of the tree, the 
+species of the tree, the street address, the order of the trees in the case that 
+there are multiple trees at one location, where the tree is on the lot, the 
+primary caretaker of the tree, the date it was planted, the diameter of the tree, 
+the dimension of the plot, the latitude the plant is at, and the longitude the 
+tree is planted.
+
 ```{r}
 sf <- read.csv(here("tidytuesday-master", "data", "2020", "2020-01-28", "sf_trees.csv"))
 ```
 
+Question 1 : Where are the trees in San Francisco and who owns them?
+
 ```{r}
-ggplot(sf, aes(x = longitude, y = latitude, color = caretaker)) +
+ggplot(sf, aes(x = (longitude*-1), y = latitude, color = caretaker)) +
   geom_point(size = 0.001, alpha = 0.2) +
-  xlim(-122.36,-122.525) + 
-  ylim(37.7,37.82) +
+  ylim(37.7,37.825) +
   theme(legend.position = "none") +
+  scale_x_continuous(trans = "reverse") +
+  xlim(122.52, 122.36) +   
   xlab("Longitude") +
   ylab("Latitude") +
   ggtitle("Map of the Trees in San Francisco")
 ```
+
+This reveals that there is a lot about where the trees are in San Francisco. A
+person can easily see the street layout of San Francisco. Also, a person can see
+how well the streets are lined with trees. It also shows where the data set 
+didn't collect data, which is parks. The long strip in the left side of the map
+is actually Golden Gate Park which has several trees, but these trees were not 
+included in the scope of the research. The central blank area as well as the 
+North West and South West are areas reserved for more nature, usually golf 
+courses. the only area with no trees that actually has no trees is the area in 
+the South East. This is a primarily commercial area with few street decorations 
+or Trees.
+
+Question 2: What is the most common type of tree?
 
 ```{r}
 
@@ -64,6 +89,17 @@ ggplot(species_list, aes(x= "", y=Count, fill = species)) +
 
 ```
 
+Surprisingly, there is a lot of variety in tree. About 50% of trees have less 
+than 5000 of the same type of tree. Considering there are around 200,000 trees,
+it means that only 11 tree types are over 2.5% of the trees in the San Francisco
+area. This indicates that the people care about their yards and their plants and 
+want their yards to be more unique and have personality, so they choose a more 
+unique tree. The area also must be habitable for any different tree types because
+there is so much of a variety. If there was a large potion of any one type of 
+tree, it would be assumed that there is a smaller tree pool to choose from for 
+consumers. However, it looks like people have found that many trees can grow 
+well in the San Francisco area.
+
 ```{r}
 g1 <- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
@@ -84,7 +120,8 @@ g1 + g2
 
 ```
 
-As seen in the graph, a majority of the trees are on curb
+As seen in the graph, a majority of the trees are on sidewalk curbs. This is 
+most likely why we see such a distinct street layout in 
 
 ```{r}
 today <- 2020

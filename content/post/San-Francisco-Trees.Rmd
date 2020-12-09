@@ -16,6 +16,15 @@ library(here)
 library(patchwork)
 ```
 
+Using the sf_trees.csv dataset from Tidy Tuesday, I investigate what the trees
+are like in San Francisco. The data has 192,987 observations and 12 variables. 
+The variables are the ID given to the tree, the legal status of the tree, the 
+species of the tree, the street address, the order of the trees in the case that 
+there are multiple trees at one location, where the tree is on the lot, the 
+primary caretaker of the tree, the date it was planted, the diameter of the tree, 
+the dimension of the plot, the latitude the plant is at, and the longitude the 
+tree is planted.
+
 ```{r}
 sf <- read.csv(here("tidytuesday-master", "data", "2020", "2020-01-28", "sf_trees.csv"))
 ```
