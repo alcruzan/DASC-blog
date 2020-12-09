@@ -57,7 +57,9 @@ included in the scope of the research. The central blank area as well as the
 North West and South West are areas reserved for more nature, usually golf 
 courses. the only area with no trees that actually has no trees is the area in 
 the South East. This is a primarily commercial area with few street decorations 
-or Trees.
+or Trees. The blue indicates private trees, which suggests that while the trees 
+may be mandatory to be on a street, it is still the land owner's responsibility 
+to take care of the tree. 
 
 Question 2: What is the most common type of tree?
 
@@ -121,7 +123,15 @@ g1 + g2
 ```
 
 As seen in the graph, a majority of the trees are on sidewalk curbs. This is 
-most likely why we see such a distinct street layout in 
+most likely why we see such a distinct street layout in the spatial map. These 
+trees most likely consists of the more common tree types because they are on 
+streets. Since they are on streets, it suggests that there is some degree of 
+uniformity set in place by some form of city official or home owners association.
+Of the relatively smaller tree locations, they are mostly in yards. This I believe
+is where the variation in tree types comes from. In yards, it is more likely that
+people can take more creative freedom on what kind of tree they want. While some
+trees look nice on a curb, other more exciting and unique trees are in private 
+yards to add more character to one's home.
 
 ```{r}
 today <- 2020
@@ -130,14 +140,27 @@ tree_age <- sf %>%
   filter(!is.na(dbh)) %>%
   mutate(age = substr(date, 1,4)) %>%
   mutate(age = as.numeric(age)) %>%
-  mutate(age = today - age) 
+  mutate(age = today - age)
+  
+tree_age
 
-
-ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
-  geom_point(position = "jitter", alpha = 0.05) +
-  facet_wrap(~cut_number(tree_age$dbh, 2)) +
+b1 <- ggplot(tree_age, aes(x= site_info, y = dbh)) +
+  geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90)) +
-  ylim(0,120)  
+  ylim(0,125) +
+  xlab("Tree Location") +
+  ylab("Diameter") +
+  ggtitle("Diameter of Tree per Location")
+
+b2 <- ggplot(tree_age, aes(x= site_info, y = age)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylim(0,70) +
+  xlab("Tree Location") +
+  ylab("Age") +
+  ggtitle("Age of Tree per Location")
+
+b1 + b2
 
 ```
 
