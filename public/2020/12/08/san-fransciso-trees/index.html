@@ -50,7 +50,7 @@
     
     <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
     
-    <li><a href="Ava-Resume.pdf">Resume</a></li>
+    <li><a href="/ava-resume.pdf">Resume</a></li>
     
   </ul>
 </nav>
@@ -62,7 +62,7 @@
 
   <article class="article">
     
-    <span class="article-duration">2 min read</span>
+    <span class="article-duration">6 min read</span>
     
 
     <h1 class="article-title">San Fransciso Trees</h1>
@@ -99,17 +99,45 @@ library(tidyverse)</code></pre>
 <pre class="r"><code>library(here)</code></pre>
 <pre><code>## here() starts at /home/alcruzan/DASC-blog</code></pre>
 <pre class="r"><code>library(patchwork)</code></pre>
+<p>Using the sf_trees.csv dataset from Tidy Tuesday, I investigate what the trees
+are like in San Francisco. The data has 192,987 observations and 12 variables.
+The variables are the ID given to the tree, the legal status of the tree, the
+species of the tree, the street address, the order of the trees in the case that
+there are multiple trees at one location, where the tree is on the lot, the
+primary caretaker of the tree, the date it was planted, the diameter of the tree,
+the dimension of the plot, the latitude the plant is at, and the longitude the
+tree is planted.</p>
 <pre class="r"><code>sf &lt;- read.csv(here(&quot;tidytuesday-master&quot;, &quot;data&quot;, &quot;2020&quot;, &quot;2020-01-28&quot;, &quot;sf_trees.csv&quot;))</code></pre>
-<pre class="r"><code>ggplot(sf, aes(x = longitude, y = latitude, color = caretaker)) +
+<div id="question-1-where-are-the-trees-in-san-francisco-and-who-owns-them" class="section level1">
+<h1>Question 1 : Where are the trees in San Francisco and who owns them?</h1>
+<pre class="r"><code>ggplot(sf, aes(x = (longitude*-1), y = latitude, color = caretaker)) +
   geom_point(size = 0.001, alpha = 0.2) +
-  xlim(-122.36,-122.525) + 
-  ylim(37.7,37.82) +
+  ylim(37.7,37.825) +
   theme(legend.position = &quot;none&quot;) +
+  scale_x_continuous(trans = &quot;reverse&quot;) +
+  xlim(122.52, 122.36) +   
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
   ggtitle(&quot;Map of the Trees in San Francisco&quot;)</code></pre>
+<pre><code>## Scale for &#39;x&#39; is already present. Adding another scale for &#39;x&#39;, which will
+## replace the existing scale.</code></pre>
 <pre><code>## Warning: Removed 2963 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>This reveals that there is a lot about where the trees are in San Francisco. A
+person can easily see the street layout of San Francisco. Also, a person can see
+how well the streets are lined with trees. It also shows where the data set
+didn’t collect data, which is parks. The long strip in the left side of the map
+is actually Golden Gate Park which has several trees, but these trees were not
+included in the scope of the research. The central blank area as well as the
+North West and South West are areas reserved for more nature, usually golf
+courses. the only area with no trees that actually has no trees is the area in
+the South East. This is a primarily commercial area with few street decorations
+or Trees. The blue indicates private trees, which suggests that while the trees
+may be mandatory to be on a street, it is still the land owner’s responsibility
+to take care of the tree.</p>
+</div>
+<div id="question-2-what-is-the-most-common-type-of-tree" class="section level1">
+<h1>Question 2: What is the most common type of tree?</h1>
 <pre class="r"><code>species_list &lt;- sf %&gt;%
   mutate(species = word(species, 1, sep=&quot; &quot;)) %&gt;%
   separate_rows(species, sep = &#39; &#39;) %&gt;%
@@ -134,12 +162,25 @@ ggplot(species_list, aes(x= &quot;&quot;, y=Count, fill = species)) +
   ylab(&quot; &quot;) +
   ggtitle(&quot;Number of Trees of a Certain Species&quot;)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Surprisingly, there is a lot of variety in tree. About 50% of trees have less
+than 5000 of the same type of tree. Considering there are around 200,000 trees,
+it means that only 11 tree types are over 2.5% of the trees in the San Francisco
+area. This indicates that the people care about their yards and their plants and
+want their yards to be more unique and have personality, so they choose a more
+unique tree. The area also must be habitable for any different tree types because
+there is so much of a variety. If there was a large potion of any one type of
+tree, it would be assumed that there is a smaller tree pool to choose from for
+consumers. However, it looks like people have found that many trees can grow
+well in the San Francisco area.</p>
+</div>
+<div id="question-3-does-site-of-the-tree-affect-the-diameter-of-the-tree" class="section level1">
+<h1>Question 3: Does site of the tree affect the diameter of the tree?</h1>
 <pre class="r"><code>g1 &lt;- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
   theme(axis.text.x = element_text(angle = 90)) +
   xlab(&quot;Tree Location&quot;) +
   ylab(&quot;Number of Trees&quot;) +
-  ggtitle(&quot;Popular Locations of Trees in San Francisco&quot;)
+  ggtitle(&quot;Popular Locations of Trees in SF&quot;)
 
 g2 &lt;- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
@@ -147,28 +188,62 @@ g2 &lt;- ggplot(sf, aes(x= site_info)) +
   ylim(0,12500) +
   xlab(&quot;Tree Location&quot;) +
   ylab(&quot;Number of Trees&quot;) +
-  ggtitle(&quot;Popular Locations of Trees in San Francisco (excluding sidewalk :curbside : cutout&quot;)
+  ggtitle(&quot;Locations Excluding Curbside Cutouts&quot;)
 
-g1 /
-  g2</code></pre>
+g1 + g2</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_bar).</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>As seen in the graph, a majority of the trees are on sidewalk curbs. This is
+most likely why we see such a distinct street layout in the spatial map. These
+trees most likely consists of the more common tree types because they are on
+streets. Since they are on streets, it suggests that there is some degree of
+uniformity set in place by some form of city official or home owners association.
+Of the relatively smaller tree locations, they are mostly in yards. This I believe
+is where the variation in tree types comes from. In yards, it is more likely that
+people can take more creative freedom on what kind of tree they want. While some
+trees look nice on a curb, other more exciting and unique trees are in private
+yards to add more character to one’s home.</p>
 <pre class="r"><code>today &lt;- 2020
 
 tree_age &lt;- sf %&gt;%
   filter(!is.na(dbh)) %&gt;%
   mutate(age = substr(date, 1,4)) %&gt;%
   mutate(age = as.numeric(age)) %&gt;%
-  mutate(age = today - age) 
+  mutate(age = today - age)
 
 
-ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
-  geom_point(position = &quot;jitter&quot;, alpha = 0.05) +
-  facet_wrap(~cut_number(tree_age$dbh, 2)) +
+b1 &lt;- ggplot(tree_age, aes(x= site_info, y = dbh)) +
+  geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90)) +
-  ylim(0,120)  </code></pre>
-<pre><code>## Warning: Removed 113369 rows containing missing values (geom_point).</code></pre>
+  ylim(0,125) +
+  xlab(&quot;Tree Location&quot;) +
+  ylab(&quot;Diameter&quot;) +
+  ggtitle(&quot;Diameter of Tree per Location&quot;)
+
+b2 &lt;- ggplot(tree_age, aes(x= site_info, y = age)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylim(0,70) +
+  xlab(&quot;Tree Location&quot;) +
+  ylab(&quot;Age&quot;) +
+  ggtitle(&quot;Age of Tree per Location&quot;)
+
+b1 + b2</code></pre>
+<pre><code>## Warning: Removed 13 rows containing non-finite values (stat_boxplot).</code></pre>
+<pre><code>## Warning: Removed 113239 rows containing non-finite values (stat_boxplot).</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>These graphs shows that trees that grow in yards grow bigger for their age then
+other trees. While other spots may use trees as decoration, trees should be in
+the place where they grow the best.</p>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>San Francisco has many beautiful trees in its cities that like to line the roads
+and street layout. It also has many trees that are in large parks as well as in
+people’s personal yards. There is a lot of variation in the tree types, and no
+one tree has near a large portion at all. This adds to the diversity of the city
+However, if trees grew in yards, the trees would grow bigger and better.</p>
+</div>
 
     </div>
   </article>
@@ -205,9 +280,6 @@ ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
 
 
     
-<script src="/js/math-code.js"></script>
-<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
 
     
   </body>

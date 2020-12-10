@@ -2,9 +2,6 @@
 title: "San Fransciso Trees"
 author: 'null'
 date: '2020-12-08'
-output:
-  html_document:
-    df_print: paged
 categories: []
 tags: []
 slug: san-fransciso-trees
@@ -86,10 +83,10 @@ species_list[nrow(species_list) + 1,] = c("Other", z)
 
 ggplot(species_list, aes(x= "", y=Count, fill = species)) +
   geom_bar(width = 10, stat = "identity") +
-  coord_polar("y", start = 0) +
   xlab(" ") +
   ylab(" ") +
-  ggtitle("Number of Trees of a Certain Species")
+  ggtitle("Number of Trees of a Certain Species") +
+  scale_fill_viridis_d()
 
 ```
 
