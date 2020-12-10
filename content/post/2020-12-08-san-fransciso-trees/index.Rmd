@@ -2,7 +2,9 @@
 title: "San Fransciso Trees"
 author: 'null'
 date: '2020-12-08'
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 categories: []
 tags: []
 slug: san-fransciso-trees
@@ -143,8 +145,7 @@ tree_age <- sf %>%
   mutate(age = substr(date, 1,4)) %>%
   mutate(age = as.numeric(age)) %>%
   mutate(age = today - age)
-  
-tree_age
+
 
 b1 <- ggplot(tree_age, aes(x= site_info, y = dbh)) +
   geom_boxplot() +
