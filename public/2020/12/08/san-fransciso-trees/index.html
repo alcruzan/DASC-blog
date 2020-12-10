@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.79.0" />
+
+
+<title>San Fransciso Trees - DASC 1104 Blog</title>
+<meta property="og:title" content="San Fransciso Trees - DASC 1104 Blog">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">Ava Cruzan</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="Ava-Resume.pdf">Resume</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">2 min read</span>
+    
+
+    <h1 class="article-title">San Fransciso Trees</h1>
+
+    
+    <span class="article-date">2020-12-08</span>
+    
+
+    <div class="article-content">
+      
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<pre class="r"><code>library(ggplot2)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(stringr)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ tibble  2.1.3     ✓ purrr   0.3.3
+## ✓ tidyr   1.0.0     ✓ forcats 0.4.0
+## ✓ readr   1.3.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>## here() starts at /home/alcruzan/DASC-blog</code></pre>
+<pre class="r"><code>library(patchwork)</code></pre>
+<pre class="r"><code>sf &lt;- read.csv(here(&quot;tidytuesday-master&quot;, &quot;data&quot;, &quot;2020&quot;, &quot;2020-01-28&quot;, &quot;sf_trees.csv&quot;))</code></pre>
+<pre class="r"><code>ggplot(sf, aes(x = longitude, y = latitude, color = caretaker)) +
+  geom_point(size = 0.001, alpha = 0.2) +
+  xlim(-122.36,-122.525) + 
+  ylim(37.7,37.82) +
+  theme(legend.position = &quot;none&quot;) +
+  xlab(&quot;Longitude&quot;) +
+  ylab(&quot;Latitude&quot;) +
+  ggtitle(&quot;Map of the Trees in San Francisco&quot;)</code></pre>
+<pre><code>## Warning: Removed 2963 rows containing missing values (geom_point).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>species_list &lt;- sf %&gt;%
+  mutate(species = word(species, 1, sep=&quot; &quot;)) %&gt;%
+  separate_rows(species, sep = &#39; &#39;) %&gt;%
+  group_by(species) %&gt;%
+  summarize(Count = n()) %&gt;%
+  filter(Count &gt;= 5000)
+
+x &lt;- 0
+
+for (i in 1:12) {
+  x &lt;- x + species_list[i,2]
+}
+
+z &lt;- 19287 - x
+
+species_list[nrow(species_list) + 1,] = c(&quot;Other&quot;, z)
+
+ggplot(species_list, aes(x= &quot;&quot;, y=Count, fill = species)) +
+  geom_bar(width = 10, stat = &quot;identity&quot;) +
+  coord_polar(&quot;y&quot;, start = 0) +
+  xlab(&quot; &quot;) +
+  ylab(&quot; &quot;) +
+  ggtitle(&quot;Number of Trees of a Certain Species&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>g1 &lt;- ggplot(sf, aes(x= site_info)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  xlab(&quot;Tree Location&quot;) +
+  ylab(&quot;Number of Trees&quot;) +
+  ggtitle(&quot;Popular Locations of Trees in San Francisco&quot;)
+
+g2 &lt;- ggplot(sf, aes(x= site_info)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90)) + 
+  ylim(0,12500) +
+  xlab(&quot;Tree Location&quot;) +
+  ylab(&quot;Number of Trees&quot;) +
+  ggtitle(&quot;Popular Locations of Trees in San Francisco (excluding sidewalk :curbside : cutout&quot;)
+
+g1 /
+  g2</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_bar).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>today &lt;- 2020
+
+tree_age &lt;- sf %&gt;%
+  filter(!is.na(dbh)) %&gt;%
+  mutate(age = substr(date, 1,4)) %&gt;%
+  mutate(age = as.numeric(age)) %&gt;%
+  mutate(age = today - age) 
+
+
+ggplot(tree_age, aes(x= site_info, y = dbh, size = age)) +
+  geom_point(position = &quot;jitter&quot;, alpha = 0.05) +
+  facet_wrap(~cut_number(tree_age$dbh, 2)) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylim(0,120)  </code></pre>
+<pre><code>## Warning: Removed 113369 rows containing missing values (geom_point).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
