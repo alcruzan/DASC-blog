@@ -71,7 +71,7 @@ c2 <- ggplot(ep, aes(x=continent, fill = group)) +
 c2 /
   c1
 ```
-Question 1: Where are a majority of the plant extinctions?
+# Question 1: Where are a majority of the plant extinctions?
 
 The plant extinctions are mostly in the continent of Africa. This is about half 
 due to Madagascar having around 100 extinctions and also due to Tanzania having
@@ -105,7 +105,7 @@ ggplot(data = threat, aes(x = year_last_seen, y = threat_level)) +
 
 ```
 
-Question 2: Is there a trend in the time period of extinctions?
+# Question 2: Is there a trend in the time period of extinctions?
 
 From 1900-1959, there were around 100 extinctions every 20 years. From 1960-1979,
 there was a downward trend in extinctions that continued into 1980-1999. Even 
@@ -136,7 +136,7 @@ a2 <- ggplot(actions, aes(x= action_type, fill = continent))+
 a2 + a1
 ```
 
-Question 3: How much action is being taken and by what countries/continents?
+# Question 3: How much action is being taken and by what countries/continents?
 
 There is a decent amount of action taken against the extinction of plants. Africa
 is taking the most action against extinction. This action is mainly concentrated 
@@ -146,3 +146,11 @@ North America with action divided among Land and Water Protection, Research
 and monitoring, and Species management. South America's action is focused in 
 Ecuador and North America's action is focused in the United States which makes 
 sense since that is where a majority of the extinctions are from.
+
+# Conclusion
+
+The most extinctions are in Madagascar, Africa, but The U.S. in North America
+and Ecuador in South America are not far behind. Extinctions have lessened over
+time, but still countries continue to take action against extinctions. Over the 
+years, there has been an increase in action and a decrease in extinctions, so 
+hopefully the trend continues and the plants can be saved. 

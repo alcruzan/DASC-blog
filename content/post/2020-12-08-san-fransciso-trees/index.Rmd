@@ -102,6 +102,8 @@ tree, it would be assumed that there is a smaller tree pool to choose from for
 consumers. However, it looks like people have found that many trees can grow 
 well in the San Francisco area.
 
+Question 3: Does site of the tree affect the diameter of the tree?
+
 ```{r}
 g1 <- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
@@ -164,4 +166,6 @@ b1 + b2
 
 ```
 
-
+These graphs shows that trees that grow in yards grow bigger for their age then 
+other trees. While other spots may use trees as decoration, trees should be in 
+the place where they grow the best. 
