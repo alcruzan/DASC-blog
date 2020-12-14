@@ -11,7 +11,7 @@ slug: san-fransciso-trees
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, messages = FALSE}
 library(ggplot2)
 library(dplyr)
 library(stringr)
@@ -69,7 +69,8 @@ species_list <- sf %>%
   separate_rows(species, sep = ' ') %>%
   group_by(species) %>%
   summarize(Count = n()) %>%
-  filter(Count >= 5000)
+  filter(Count >= 5000) %>%
+  arrange(Count)
 
 x <- 0
 
@@ -101,7 +102,7 @@ tree, it would be assumed that there is a smaller tree pool to choose from for
 consumers. However, it looks like people have found that many trees can grow 
 well in the San Francisco area.
 
-# Question 3: Does site of the tree affect the diameter of the tree?
+# Question 3: Where are the trees?
 
 ```{r}
 g1 <- ggplot(sf, aes(x= site_info)) +
@@ -119,7 +120,7 @@ g2 <- ggplot(sf, aes(x= site_info)) +
   ylab("Number of Trees") +
   ggtitle("Locations Excluding Curbside Cutouts")
 
-g1 + g2
+g1
 
 ```
 
@@ -128,11 +129,18 @@ most likely why we see such a distinct street layout in the spatial map. These
 trees most likely consists of the more common tree types because they are on 
 streets. Since they are on streets, it suggests that there is some degree of 
 uniformity set in place by some form of city official or home owners association.
+
+```{r}
+g2
+```
+
 Of the relatively smaller tree locations, they are mostly in yards. This I believe
 is where the variation in tree types comes from. In yards, it is more likely that
 people can take more creative freedom on what kind of tree they want. While some
 trees look nice on a curb, other more exciting and unique trees are in private 
 yards to add more character to one's home.
+
+# Question 4: Where do trees grow best?
 
 ```{r}
 today <- 2020
@@ -166,7 +174,9 @@ b1 + b2
 
 These graphs shows that trees that grow in yards grow bigger for their age then 
 other trees. While other spots may use trees as decoration, trees should be in 
-the place where they grow the best. 
+the place where they grow the best. This also shows that trees who grow on 
+sidewalks are probably intentionally smaller, thinner trees to avoid any road 
+and sidewalk damage.
 
 # Conclusion
 
@@ -174,4 +184,6 @@ San Francisco has many beautiful trees in its cities that like to line the roads
 and street layout. It also has many trees that are in large parks as well as in 
 people's personal yards. There is a lot of variation in the tree types, and no 
 one tree has near a large portion at all. This adds to the diversity of the city
-However, if trees grew in yards, the trees would grow bigger and better.
+However, if trees grew in yards, the trees would grow bigger and better. However,
+some trees are intentionally smaler to prevent road damage big branches falling 
+on the roads or sidewalks.

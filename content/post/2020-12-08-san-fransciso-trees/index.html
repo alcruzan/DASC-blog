@@ -77,7 +77,8 @@ to take care of the tree.</p>
   separate_rows(species, sep = &#39; &#39;) %&gt;%
   group_by(species) %&gt;%
   summarize(Count = n()) %&gt;%
-  filter(Count &gt;= 5000)
+  filter(Count &gt;= 5000) %&gt;%
+  arrange(Count)
 
 x &lt;- 0
 
@@ -107,8 +108,8 @@ tree, it would be assumed that there is a smaller tree pool to choose from for
 consumers. However, it looks like people have found that many trees can grow
 well in the San Francisco area.</p>
 </div>
-<div id="question-3-does-site-of-the-tree-affect-the-diameter-of-the-tree" class="section level1">
-<h1>Question 3: Does site of the tree affect the diameter of the tree?</h1>
+<div id="question-3-where-are-the-trees" class="section level1">
+<h1>Question 3: Where are the trees?</h1>
 <pre class="r"><code>g1 &lt;- ggplot(sf, aes(x= site_info)) +
   geom_bar() +
   theme(axis.text.x = element_text(angle = 90)) +
@@ -124,19 +125,24 @@ g2 &lt;- ggplot(sf, aes(x= site_info)) +
   ylab(&quot;Number of Trees&quot;) +
   ggtitle(&quot;Locations Excluding Curbside Cutouts&quot;)
 
-g1 + g2</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_bar).</code></pre>
+g1</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>As seen in the graph, a majority of the trees are on sidewalk curbs. This is
 most likely why we see such a distinct street layout in the spatial map. These
 trees most likely consists of the more common tree types because they are on
 streets. Since they are on streets, it suggests that there is some degree of
-uniformity set in place by some form of city official or home owners association.
-Of the relatively smaller tree locations, they are mostly in yards. This I believe
+uniformity set in place by some form of city official or home owners association.</p>
+<pre class="r"><code>g2</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_bar).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Of the relatively smaller tree locations, they are mostly in yards. This I believe
 is where the variation in tree types comes from. In yards, it is more likely that
 people can take more creative freedom on what kind of tree they want. While some
 trees look nice on a curb, other more exciting and unique trees are in private
 yards to add more character to one’s home.</p>
+</div>
+<div id="question-4-where-do-trees-grow-best" class="section level1">
+<h1>Question 4: Where do trees grow best?</h1>
 <pre class="r"><code>today &lt;- 2020
 
 tree_age &lt;- sf %&gt;%
@@ -165,10 +171,12 @@ b2 &lt;- ggplot(tree_age, aes(x= site_info, y = age)) +
 b1 + b2</code></pre>
 <pre><code>## Warning: Removed 13 rows containing non-finite values (stat_boxplot).</code></pre>
 <pre><code>## Warning: Removed 113239 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>These graphs shows that trees that grow in yards grow bigger for their age then
 other trees. While other spots may use trees as decoration, trees should be in
-the place where they grow the best.</p>
+the place where they grow the best. This also shows that trees who grow on
+sidewalks are probably intentionally smaller, thinner trees to avoid any road
+and sidewalk damage.</p>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
@@ -176,5 +184,7 @@ the place where they grow the best.</p>
 and street layout. It also has many trees that are in large parks as well as in
 people’s personal yards. There is a lot of variation in the tree types, and no
 one tree has near a large portion at all. This adds to the diversity of the city
-However, if trees grew in yards, the trees would grow bigger and better.</p>
+However, if trees grew in yards, the trees would grow bigger and better. However,
+some trees are intentionally smaler to prevent road damage big branches falling
+on the roads or sidewalks.</p>
 </div>
