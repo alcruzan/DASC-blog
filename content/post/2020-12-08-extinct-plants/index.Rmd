@@ -11,7 +11,7 @@ tags: []
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, message = FALSE}
+```{r, include=FALSE}
 library(ggplot2)
 library(dplyr)
 library(stringr)

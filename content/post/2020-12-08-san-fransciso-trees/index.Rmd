@@ -11,7 +11,7 @@ slug: san-fransciso-trees
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, messages = FALSE}
+```{r, include=FALSE}
 library(ggplot2)
 library(dplyr)
 library(stringr)
